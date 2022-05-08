@@ -20,11 +20,12 @@ logger = logging.getLogger(__name__)
 
 def _get_random_port():
     while True:
-        port = random.randint(1023, 65535)
+        # port = random.randint(1023, 65535)
+        port = 8180
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             try:
-                sock.bind(('localhost', port))
+                sock.bind(('', port))
             except OSError:
                 logger.warning('Port %s is in use' % port)
                 continue
@@ -52,7 +53,7 @@ def get_wsgi_server(app):
 
     port = _get_random_port()
     server = wsgiref.simple_server.make_server(
-        'localhost', port, app, server_class=ThreadingWSGIServer,
+        '0.0.0.0', port, app, server_class=ThreadingWSGIServer,
         handler_class=WSGIRequestHandler11,
     )
 
